@@ -51,6 +51,10 @@ iserver_debian_custom_repos:
   - deb https://download.docker.com/linux/debian buster stable
   - deb https://apt.releases.hashicorp.com buster main
 
+iserver_debian_zfs_repos:
+ - deb http://deb.debian.org/debian buster main contrib
+ - deb http://deb.debian.org/debian buster-backports main contrib
+
 # packages to install on every Debian/Ubuntu server
 iserver_deb_packages:
   - openssh-server   # needed for Travis testing
@@ -98,12 +102,6 @@ iserver_custom_packages:
   - packer
   - vault
  
-iserver_zfs_packages:
-  - dkms
-  - spl-dkms
-  - zfs-dkms
-  - zfsutils-linux
-
 # custom python libraries to install
 iserver_pip_packages:
   - jupyter # will install ipython

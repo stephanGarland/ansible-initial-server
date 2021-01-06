@@ -120,10 +120,8 @@
     extra_path: /usr/local/go/bin
   lineinfile:
     path: /etc/environment
-    regexp: 'PATH=(["])((?!.*?{{ extra_path }}).*?)(["])$'
-    line: 'PATH=\1\2:{{ extra_path }}\3'
-    backrefs: yes
-  when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev | bool == 'true')
+    line: "PATH={{ extra_path }}:$PATH"
+  when: isdev | bool == 'true'
 
 - name: Ensure that Terragrunt is installed.
   get_url:

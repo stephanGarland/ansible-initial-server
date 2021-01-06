@@ -1,13 +1,13 @@
 ### BASE PACKAGES ###
 # Debian, Ubuntu
 
-- name: Check for prod or dev role.
+- name: Check for dev role.
   vars:
     vm_role: "{{ vm_role }}"
   command: echo vm_role
   register: isdev
   when:
-    vm_role is search("dev")
+    vm_role is search('dev')
 
 - name: Check for zfs support.
   vars:
@@ -15,7 +15,7 @@
   command: echo zfs
   register: iszfs
   when:
-    vm_zfs is search("true")
+    vm_zfs is search('true')
 
 # replaces sources.list repos.
 - name: Move original /etc/apt/sources.list to back it up (once).
@@ -50,27 +50,27 @@
   apt_key:
     url: https://apt.releases.hashicorp.com/gpg
     state: present
-  when: (ansible_distribution == 'Debian') and (isdev)
+  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
 
 - name: Add Docker repo key.
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
-  when: (ansible_distribution == 'Debian') and (isdev)
+  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
 
 - name: Add custom repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
     state: present
   loop: "{{ iserver_debian_custom_repos }}"
-  when: (ansible_distribution == 'Debian') and (isdev)
+  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
 
 - name: Add ZFS repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
     state: present
   loop: "{{ iserver_debian_zfs_repos }}"
-  when: (ansible_distribution == 'Debian') and (iszfs)
+  when: (ansible_distribution == 'Debian') and (iszfs | bool == 'true')
 
 - name: Ensure that all packages are updated and upgraded.
   apt:
@@ -87,13 +87,13 @@
   apt:
     name: "{{ iserver_custom_packages }}"
     state: present
-  when: isdev
+  when: isdev | bool == 'true'
 
 - name: Ensure that Linux headers are installed.
   apt:
     name: "linux-headers-{{ ansible_kernel }}"
     state: present
-  when: (isdev) or (iszfs)
+  when: (isdev | bool == 'true') or (iszfs | bool == 'true')
 
 - name: Ensure that micro is installed.
   shell: curl -fsSl https://getmic.ro | bash && mv micro /usr/local/bin
@@ -106,14 +106,14 @@
   pip:
     name: "{{ iserver_pip_packages }}"
     state: present
-  when: isdev
+  when: isdev | bool == 'true'
 
 - name: Ensure that Golang is installed.
   unarchive:
     src: https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
     dest: /usr/local
     remote_src: yes
-  when: isdev
+  when: isdev | bool == 'true'
 
 - name: Add GOPATH to system path.
   vars:
@@ -123,13 +123,13 @@
     regexp: 'PATH=(["])((?!.*?{{ extra_path }}).*?)(["])$'
     line: 'PATH=\1\2:{{ extra_path }}\3'
     backrefs: yes
-  when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev)
+  when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev | bool == 'true')
 
 - name: Ensure that Terragrunt is installed.
   get_url:
     url: https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64
     dest: /usr/local/bin
-  when: isdev
+  when: isdev | bool == 'true'
 
 - name: Ensure that ZFS On Linux pre-requisite is installed.
   apt:
@@ -137,20 +137,20 @@
     state: present
     default_release: buster-backports
     install_recommends: no
-  when: (ansible_distribution == 'Debian') and (iszfs)
+  when: (ansible_distribution == 'Debian') and (iszfs | bool == 'true')
 
 - name: Add the ZFS module.
   modprobe:
     name: zfs
     state: present
-  when: (ansible_distribution == 'Debian') and (iszfs)
+  when: (ansible_distribution == 'Debian') and (iszfs | bool == 'true')
 
 - name: Ensure that ZFS On Linux is installed.
   apt:
     name: zfsutils-linux
     state: present
     default_release: buster-backports
-  when: (ansible_distribution == 'Debian') and (iszfs)
+  when: (ansible_distribution == 'Debian') and (iszfs | bool == 'true')
 
 # This is done rather than as part of the package install, as Debian's version doesn't handle
 # ZFS pre-allocation correctly. This can be removed when Debian includes >= v1.48.

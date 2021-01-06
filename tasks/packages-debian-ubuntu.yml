@@ -50,27 +50,27 @@
   apt_key:
     url: https://apt.releases.hashicorp.com/gpg
     state: present
-  when: (ansible_distribution == 'Debian') and (isdev is defined)
+  when: (ansible_distribution == 'Debian') and (isdev)
 
 - name: Add Docker repo key.
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
-  when: (ansible_distribution == 'Debian') and (isdev is defined)
+  when: (ansible_distribution == 'Debian') and (isdev)
 
 - name: Add custom repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
     state: present
   loop: "{{ iserver_debian_custom_repos }}"
-  when: (ansible_distribution == 'Debian') and (isdev is defined)
+  when: (ansible_distribution == 'Debian') and (isdev)
 
 - name: Add ZFS repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
     state: present
   loop: "{{ iserver_debian_zfs_repos }}"
-  when: (ansible_distribution == 'Debian') and (iszfs is defined)
+  when: (ansible_distribution == 'Debian') and (iszfs)
 
 - name: Ensure that all packages are updated and upgraded.
   apt:
@@ -93,7 +93,7 @@
   apt:
     name: "linux-headers-{{ ansible_kernel }}"
     state: present
-  when: (isdev is defined) or (iszfs is defined)
+  when: (isdev) or (iszfs)
 
 - name: Ensure that micro is installed.
   shell: curl -fsSl https://getmic.ro | bash && mv micro /usr/local/bin
@@ -123,7 +123,7 @@
     regexp: 'PATH=(["])((?!.*?{{ extra_path }}).*?)(["])$'
     line: 'PATH=\1\2:{{ extra_path }}\3'
     backrefs: yes
-  when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev is defined)
+  when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev)
 
 - name: Ensure that Terragrunt is installed.
   get_url:
@@ -137,20 +137,20 @@
     state: present
     default_release: buster-backports
     install_recommends: no
-  when: (ansible_distribution == 'Debian') and (iszfs is defined)
+  when: (ansible_distribution == 'Debian') and (iszfs)
 
 - name: Add the ZFS module.
   modprobe:
     name: zfs
     state: present
-  when: (ansible_distribution == 'Debian') and (iszfs is defined)
+  when: (ansible_distribution == 'Debian') and (iszfs)
 
 - name: Ensure that ZFS On Linux is installed.
   apt:
     name: zfsutils-linux
     state: present
     default_release: buster-backports
-  when: (ansible_distribution == 'Debian') and (iszfs is defined)
+  when: (ansible_distribution == 'Debian') and (iszfs)
 
 # This is done rather than as part of the package install, as Debian's version doesn't handle
 # ZFS pre-allocation correctly. This can be removed when Debian includes >= v1.48.

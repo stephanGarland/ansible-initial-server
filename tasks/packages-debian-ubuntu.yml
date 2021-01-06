@@ -87,7 +87,7 @@
   apt:
     name: "{{ iserver_custom_packages }}"
     state: present
-  when: isdev is defined
+  when: isdev
 
 - name: Ensure that Linux headers are installed.
   apt:
@@ -106,14 +106,14 @@
   pip:
     name: "{{ iserver_pip_packages }}"
     state: present
-  when: isdev is defined
+  when: isdev
 
 - name: Ensure that Golang is installed.
   unarchive:
     src: https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
     dest: /usr/local
     remote_src: yes
-  when: isdev is defined
+  when: isdev
 
 - name: Add GOPATH to system path.
   vars:
@@ -129,7 +129,7 @@
   get_url:
     url: https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64
     dest: /usr/local/bin
-  when: isdev is defined
+  when: isdev
 
 - name: Ensure that ZFS On Linux pre-requisite is installed.
   apt:

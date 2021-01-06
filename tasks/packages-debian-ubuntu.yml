@@ -40,3 +40,40 @@
   apt:
     name: "{{ iserver_deb_packages }}"
     state: present
+
+- name: Ensure that custom packages are installed.
+  apt:
+    name: "{{ iserver_custom_packages }}"
+    state: present
+
+- name: Ensure that micro is installed.
+  shell: curl -fsSl https://getmic.ro | bash && mv micro /usr/local/bin
+  args:
+    warn: no
+
+- name: Ensure that Python libraries are installed.
+  pip:
+    name: "{{ iserver_pip_packages }}"
+    state: present
+
+- name: Ensure that Golang is installed.
+  unarchive:
+    src: https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
+    dest: /usr/local
+    remote_src: yes
+
+- name: Add Docker GPG apt Key.
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository.
+  apt_repository:
+    repo: deb https://download.docker.com/linux/debian buster stable
+    state: present
+
+- name: Update apt with Docker repo and ensure that Docker is installed.
+  apt:
+    name: "{{ iserver_docker_packages }}"
+    state: present
+    update_cache: yes

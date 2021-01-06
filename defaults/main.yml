@@ -67,6 +67,46 @@ iserver_deb_packages:
   # - pv
   # - screen
 
+# custom packages to install
+iserver_custom_packages:
+  - apt-transport-https
+  - build-essential
+  - ca-certificates
+  - git
+  - glances 
+  - gnupg-agent
+  - htop
+  - jq
+  - mc
+  - ncdu 
+  - python3
+  - python3-pip
+  - screen
+  - silversearcher-ag
+  - software-properties-common
+  - smartmontools 
+  - tmux 
+  - tree 
+  - zsh
+
+# custom python libraries to install
+iserver_pip_packages:
+  - ipython
+  - jupyter
+  - matplotlib
+  - mypy
+  - numpy
+  - pandas
+  - requests
+  - scipy
+  - virtualenv
+
+# docker packages to install
+iserver_docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
 # packages to install on every OpenBSD server
 iserver_obsd_packages:
   - colorls # used by .profile

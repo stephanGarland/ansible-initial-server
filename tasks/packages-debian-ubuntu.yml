@@ -105,7 +105,7 @@
 
 - name: Add GOPATH to system path.
   vars:
-    extra_path = /usr/local/go/bin
+    extra_path: /usr/local/go/bin
   lineinfile:
     path: /etc/environment
     regexp: 'PATH=(["])((?!.*?{{ extra_path }}).*?)(["])$'

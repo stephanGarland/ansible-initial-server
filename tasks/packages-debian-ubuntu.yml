@@ -119,10 +119,9 @@
   when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev is defined)
 
 - name: Ensure that Terragrunt is installed.
-  unarchive:
-    src: https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64
+  get_url:
+    url: https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64
     dest: /usr/local/bin
-    remote_src: yes
   when: isdev is defined
 
 - name: Ensure that ZFS On Linux is installed.

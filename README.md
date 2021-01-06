@@ -41,7 +41,6 @@ Use with a default install of **Alpine 3.x** server ISO
 - generates new SSH host keys on first boot to avoid duplicates in cloned VMs
 - automatically grow partition after resizing VM disk
 - optional SSH warning banner
-- optional Verse of the Day displayed on motd
 
 ### Configuration features - OpenBSD
 - passwordless doas for default user 'deploy' (name can be changed)

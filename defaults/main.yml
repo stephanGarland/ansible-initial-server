@@ -47,6 +47,14 @@ iserver_alpine_repos:
   - '@testing http://nl.alpinelinux.org/alpine/edge/testing'
   - '@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community'
 
+iserver_debian_custom_repos:
+  - deb https://download.docker.com/linux/debian buster stable
+  - deb https://apt.releases.hashicorp.com buster stable
+
+iserver_debian_custom_repo_keys:
+  - https://download.docker.com/linux/debian/gpg
+  - https://apt.releases.hashicorp.com/gpg
+
 # packages to install on every Debian/Ubuntu server
 iserver_deb_packages:
   - openssh-server   # needed for Travis testing
@@ -59,36 +67,46 @@ iserver_deb_packages:
   - psmisc           # includes pstree
   - wget
   - curl
-  # - lsof
-  # - lshw
-  # - ncdu
-  # - netstat-nat
-  # - dnsutils
-  # - pv
-  # - screen
-
-# custom packages to install
-iserver_custom_packages:
-  - apt-transport-https
-  - build-essential
-  - ca-certificates
+  - fail2ban
   - git
-  - glances 
-  - gnupg-agent
+  - glances
   - htop
   - jq
   - mc
   - ncdu 
+  - parallel
+  - pigz
+  - pv
   - python3
   - python3-pip
   - python3-setuptools
   - screen
   - silversearcher-ag
   - software-properties-common
-  - smartmontools 
   - tmux 
   - tree 
   - zsh
+
+# custom packages to install
+iserver_custom_packages:
+  - apt-transport-https
+  - build-essential
+  - ca-certificates
+  - consul
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - gnupg-agent
+  - kubectx
+  - terraform
+  - packer
+  - vault
+ 
+iserver_zfs_packages:
+  - dkms
+  - spl-dkms
+  - zfs-dkms
+  - zfsutils-linux
 
 # custom python libraries to install
 iserver_pip_packages:
@@ -98,12 +116,6 @@ iserver_pip_packages:
   - requests
   - seaborn # will install matplotlib and scipy
   - virtualenv
-
-# docker packages to install
-iserver_docker_packages:
-  - docker-ce
-  - docker-ce-cli
-  - containerd.io
 
 # packages to install on every OpenBSD server
 iserver_obsd_packages:
@@ -148,7 +160,7 @@ iserver_sshkey: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}
 iserver_ssh_banner: none # or /etc/ssh/issue.net
 
 ### CUSTOMIZE ###
-iserver_timezone: UTC
+iserver_timezone: America/Chicago
 
 iserver_user_profile: |
   # no-op
@@ -203,5 +215,3 @@ iserver_bashrc_debian: |
 iserver_bashrc_ubuntu: |
   # no-op
 
-# needs 'verse' installed
-iserver_verse_enabled: false

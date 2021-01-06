@@ -1,6 +1,20 @@
 ### BASE PACKAGES ###
 # Debian, Ubuntu
 
+- name: Check for prod or dev role.
+  vars:
+    vm_role: "{{ vm_role }}"
+  register: isdev
+  when:
+    vm_role == 'dev'
+
+- name: Check for zfs support.
+  vars:
+    zfs: "{{ vm_zfs }}"
+  register: iszfs
+  when:
+    vm_zfs == 'true'
+
 # replaces sources.list repos.
 - name: Move original /etc/apt/sources.list to back it up (once).
   command: mv /etc/apt/sources.list /etc/apt/sources.list.original
@@ -30,6 +44,20 @@
     dest: /etc/apt/sources.list
     force: no
 
+- name: Add custom repository keys.
+  apt_key:
+    url: "{{ item }}"
+    loop: "{{ iserver_debian_custom_repo_keys }}"
+    state: present
+  when: (ansible_distribution == 'Debian') and (isdev is defined)
+
+- name: Add custom repositories into sources list directory.
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  loop: "{{ iserver_debian_custom_repos }}"
+  when: (ansible_distribution == 'Debian') and (isdev is defined)
+
 - name: Ensure that all packages are updated and upgraded.
   apt:
     upgrade: "yes"
@@ -45,6 +73,13 @@
   apt:
     name: "{{ iserver_custom_packages }}"
     state: present
+  when: isdev is defined
+
+- name: Ensure that Linux headers are installed.
+  apt:
+    name: "linux-headers-{{ ansible_kernel }}"
+    state: present
+  when: (isdev is defined) or (iszfs is defined)
 
 - name: Ensure that micro is installed.
   shell: curl -fsSl https://getmic.ro | bash && mv micro /usr/local/bin
@@ -57,25 +92,42 @@
   pip:
     name: "{{ iserver_pip_packages }}"
     state: present
+  when: isdev is defined
 
 - name: Ensure that Golang is installed.
   unarchive:
     src: https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
     dest: /usr/local
     remote_src: yes
+  when: isdev is defined
 
-- name: Add Docker GPG apt Key.
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+- name: Add GOPATH to system path.
+  vars:
+    extra_path = /usr/local/go/bin
+  lineinfile:
+    path: /etc/environment
+    regexp: 'PATH=(["])((?!.*?{{ extra_path }}).*?)(["])$'
+    line: 'PATH=\1\2:{{ extra_path }}\3'
+    backrefs: yes
+  when: (lookup('file', '/etc/environment') is search('^\s*PATH\s*=')) and (isdev is defined)
 
-- name: Add Docker Repository.
-  apt_repository:
-    repo: deb https://download.docker.com/linux/debian buster stable
-    state: present
+- name: Ensure that Terragrunt is installed.
+  unarchive:
+    src: https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64
+    dest: /usr/local/bin
+    remote_src: yes
+  when: isdev is defined
 
-- name: Update apt with Docker repo and ensure that Docker is installed.
+- name: Ensure that ZFS On Linux is installed.
   apt:
-    name: "{{ iserver_docker_packages }}"
+    name: "{{ iserver_zfs_packages }}"
     state: present
-    update_cache: yes
+    default_release: buster-backports
+  when: iszfs is defined
+
+# This is done rather than as part of the package install, as Debian's version doesn't handle
+# ZFS pre-allocation correctly. This can be removed when Debian includes >= v1.48.
+- name: Ensure that rclone is installed.
+  shell: curl -fsSl https://rclone.org/install.sh | bash
+  args:
+    warn: no

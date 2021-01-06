@@ -92,14 +92,11 @@ iserver_custom_packages:
 
 # custom python libraries to install
 iserver_pip_packages:
-  - ipython
-  - jupyter
-  - matplotlib
+  - jupyter # will install ipython
   - mypy
-  - numpy
-  - pandas
+  - pandas # will install correct numpy dependency
   - requests
-  - scipy
+  - seaborn # will install matplotlib and scipy
   - virtualenv
 
 # docker packages to install

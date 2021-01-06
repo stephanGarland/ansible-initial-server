@@ -4,18 +4,18 @@
 - name: Check for prod or dev role.
   vars:
     vm_role: "{{ vm_role }}"
-  register: isdev
   command: echo vm_role
+  register: isdev
   when:
-    vm_role == 'dev'
+    vm_role.stdout | search("dev")
 
 - name: Check for zfs support.
   vars:
     zfs: "{{ vm_zfs }}"
+  command: echo zfs
   register: iszfs
-  command: echo iszfs
   when:
-    vm_zfs == 'true'
+    vm_zfs.stdout | search("true")
 
 # replaces sources.list repos.
 - name: Move original /etc/apt/sources.list to back it up (once).

@@ -11,6 +11,8 @@ iserver_lock_root: false
 ### BASE PACKAGES ###
 iserver_debian_repos:
   ## Debian 10 buster example
+  - deb http://repo.myloc.de/debian buster main non-free contrib
+  - deb-src http://repo.myloc.de/debian buster main non-free contrib
   - deb http://security.debian.org/debian-security buster/updates main contrib non-free
   - deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
   - deb http://deb.debian.org/debian buster-updates main contrib non-free

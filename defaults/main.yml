@@ -51,10 +51,6 @@ iserver_debian_custom_repos:
   - deb https://download.docker.com/linux/debian buster stable
   - deb https://apt.releases.hashicorp.com buster stable
 
-iserver_debian_custom_repo_keys:
-  - https://download.docker.com/linux/debian/gpg
-  - https://apt.releases.hashicorp.com/gpg
-
 # packages to install on every Debian/Ubuntu server
 iserver_deb_packages:
   - openssh-server   # needed for Travis testing

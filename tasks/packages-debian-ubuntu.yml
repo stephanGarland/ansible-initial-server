@@ -46,10 +46,15 @@
     dest: /etc/apt/sources.list
     force: no
 
-- name: Add custom repository keys.
+- name: Add Hashicorp repo key.
   apt_key:
-    url: "{{ item }}"
-    loop: "{{ iserver_debian_custom_repo_keys }}"
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+  when: (ansible_distribution == 'Debian') and (isdev is defined)
+
+- name: Add Docker repo key.
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
     state: present
   when: (ansible_distribution == 'Debian') and (isdev is defined)
 

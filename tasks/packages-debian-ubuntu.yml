@@ -5,6 +5,7 @@
   vars:
     vm_role: "{{ vm_role }}"
   register: isdev
+  command: echo vm_role
   when:
     vm_role == 'dev'
 
@@ -12,6 +13,7 @@
   vars:
     zfs: "{{ vm_zfs }}"
   register: iszfs
+  command: echo iszfs
   when:
     vm_zfs == 'true'
 

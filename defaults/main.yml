@@ -49,7 +49,7 @@ iserver_alpine_repos:
 
 iserver_debian_custom_repos:
   - deb https://download.docker.com/linux/debian buster stable
-  - deb https://apt.releases.hashicorp.com buster stable
+  - deb https://apt.releases.hashicorp.com buster main
 
 # packages to install on every Debian/Ubuntu server
 iserver_deb_packages:

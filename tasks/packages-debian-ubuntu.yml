@@ -7,7 +7,7 @@
   command: echo vm_role
   register: isdev
   when:
-    vm_role.stdout | search("dev")
+    vm_role.stdout is search("dev")
 
 - name: Check for zfs support.
   vars:
@@ -15,7 +15,7 @@
   command: echo zfs
   register: iszfs
   when:
-    vm_zfs.stdout | search("true")
+    vm_zfs.stdout is search("true")
 
 # replaces sources.list repos.
 - name: Move original /etc/apt/sources.list to back it up (once).

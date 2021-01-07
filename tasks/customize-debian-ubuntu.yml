@@ -7,7 +7,7 @@
   command: echo "{{ vm_zsh }}"
   register: iszsh
   when:
-    vm_zsh.stdout is search('true')
+    vm_zsh is search('true')
 
 - name: Move the original /etc/motd to back it up (once).
   command: mv /etc/motd /etc/motd.original

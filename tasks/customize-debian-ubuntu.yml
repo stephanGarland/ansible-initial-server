@@ -1,12 +1,12 @@
 ### CUSTOMIZE ###
 # Debian, Ubuntu
 
-#- name: Check for zsh customizations.
-#  vars:
-#    vm_zsh: "{{ vm_zsh }}"
-#  command: echo vm_zsh
-#  register: iszsh
-#  when: vm_zsh is search('true')
+- name: Check for zsh customizations.
+  vars:
+    vm_zsh: "{{ vm_zsh }}"
+  command: echo "{{ vm_zsh }}"
+  register: iszsh
+  when: vm_zsh is search('true')
 
 - name: Move the original /etc/motd to back it up (once).
   command: mv /etc/motd /etc/motd.original
@@ -102,53 +102,53 @@
   args:
     chdir: "/home/{{ iserver_user }}"
     warn: no
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Ensure that Oh My Zsh plugins are installed.
   git:
     repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/you-should-use
     depth: '1'
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Ensure that Oh My Zsh plugins are installed.
   git:
     repo: https://github.com/zsh-users/zsh-autosuggestions
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     depth: '1'
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Ensure that Oh My Zsh plugins are installed.
   git:
     repo: https://github.com/zsh-users/zsh-history-substring-search
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
     depth: '1'
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Ensure that Oh My Zsh plugins are installed.
   git:
     repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     depth: '1'
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Ensure that Oh My Zsh plugins are installed.
   git:
     repo: https://github.com/romkatv/powerlevel10k.git
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
     depth: '1'
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Copy the user's .zshrc.
   copy:
     src: 30-zshrc
     dest: "/home/{{ iserver_user }}/.zshrc"
     mode: a+x
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'
 
 - name: Copy the user's .p10k.zsh.
   copy:
     src: 40-p10k
     dest: "/home/{{ iserver_user }}/.p10k.zsh"
     mode: a+x
-  #when: iszsh | bool == 'true'
+  when: iszsh | bool == 'true'

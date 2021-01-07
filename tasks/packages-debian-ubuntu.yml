@@ -4,14 +4,14 @@
 - name: Check for dev role.
   vars:
     vm_role: "{{ vm_role }}"
-  command: echo vm_role
+  command: echo "{{ vm_role }}"
   register: isdev
   when: vm_role is search('dev')
 
 - name: Check for zfs support.
   vars:
     vm_zfs: "{{ vm_zfs }}"
-  command: echo zfs
+  command: echo "{{ vm_zfs }}"
   register: iszfs
   when: vm_zfs is search('true')
 

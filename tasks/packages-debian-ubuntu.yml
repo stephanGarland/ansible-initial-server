@@ -12,7 +12,7 @@
 - name: Check for zfs support.
   vars:
     vm_zfs: "{{ vm_zfs }}"
-  command: echo zfs
+  command: echo vm_zfs
   register: iszfs
   when:
     vm_zfs is search('true')

@@ -6,7 +6,6 @@
     vm_role: "{{ vm_role }}"
   command: echo vm_role
   register: isdev
-  debug: msg="{{ isdev.stdout }}"
   when: vm_role is search('dev')
 
 - name: Check for zfs support.
@@ -14,7 +13,6 @@
     vm_zfs: "{{ vm_zfs }}"
   command: echo zfs
   register: iszfs
-  debug: msg="{{ iszfs.stdout }}"
   when: vm_zfs is search('true')
 
 # replaces sources.list repos.

@@ -70,7 +70,6 @@
     state: present
   when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
 
-  url: 
 - name: Add custom repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"

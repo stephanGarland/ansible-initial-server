@@ -6,6 +6,7 @@
     vm_zsh: "{{ vm_zsh }}"
   command: echo vm_zsh
   register: iszsh
+  debug: msg="{{ iszsh.stdout }}"
   when: vm_zsh is search('true')
 
 - name: Move the original /etc/motd to back it up (once).

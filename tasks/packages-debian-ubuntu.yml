@@ -46,18 +46,31 @@
     dest: /etc/apt/sources.list
     force: no
 
-- name: Add Hashicorp repo key.
-  apt_key:
-    url: https://apt.releases.hashicorp.com/gpg
-    state: present
-  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
-
 - name: Add Docker repo key.
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
   when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
 
+- name: Add Hashicorp repo key.
+  apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
+
+- name: Add Helm repo key.
+  apt_key:
+    url: https://baltocdn.com/helm/signing.asc
+    state: present
+  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
+
+- name: Add GCloud repo key.
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  when: (ansible_distribution == 'Debian') and (isdev | bool == 'true')
+
+  url: 
 - name: Add custom repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
@@ -150,8 +163,9 @@
     default_release: buster-backports
   when: (ansible_distribution == 'Debian') and (iszfs | bool == 'true')
 
-# This is done rather than as part of the package install, as Debian's version doesn't handle
-# ZFS pre-allocation correctly. This can be removed when Debian includes >= v1.48.
+# This is done via the install script rather than as part of the package install,
+# as Debian's version doesn't handle ZFS pre-allocation correctly.
+# This can be removed when Debian includes >= v1.48.
 - name: Ensure that rclone is installed.
   shell: curl -fsSl https://rclone.org/install.sh | bash
   args:

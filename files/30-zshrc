@@ -1,0 +1,69 @@
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+POWERLEVEL9K_MODE="awesome-patched"
+DISABLE_UPDATE_PROMPT="true"
+
+plugins=(ansible colored-man-pages git gitignore kubectl virtualenvwrapper vscode wd web-search you-should-use zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+
+# Output for you-should-use recommendations
+export YSU_MESSAGE_FORMAT="$(tput setaf 1)Use %alias instead of %command $(tput sgr0)"
+
+# Sets autosuggest color so it's readable with Solarized Dark
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#586e75"
+
+source $ZSH/oh-my-zsh.sh
+
+alias gbsc="git branch --show-current"
+alias gdel="git stash && git stash drop"
+alias ksw="kubectx"
+alias kns="kubens"
+alias tf="terraform"
+alias tg="terragrunt"
+
+export PATH=$PATH:~/.local/bin:/usr/local/go/bin
+
+gpsu() {
+    branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    git push --set-upstream origin $branch
+}
+
+KUBECONFIG=$(find ~/.kube/config.d -type f | paste -s -d ":" -) kubectl config view --merge --flatten > ~/.kube/config.d/merged.conf
+export KUBECONFIG="$HOME/.kube/config.d/merged.conf"
+
+kshell() {
+    if [[ $1 == -h || $1 == --help ]]; then
+        echo "Usage: kshell <namespace> <container>"
+		echo "If no args are provided, kshell will run kubectx and kubens"
+		echo "If -n is passed as the first arg, kshell will use the specified namespace in the current context"
+	elif [[ $1 == -n ]]; then
+		k exec -n $2 -it $(kgp -n $2 | fzf | awk '{print $1}') -- /bin/bash
+    elif [ $# -eq 0 ]; then
+		kubectx
+		kubens
+		k exec -it $(kgp | fzf | awk '{print $1}') -- /bin/bash
+	else
+		kshell -h
+    fi
+}
+
+kdesc() {
+	if [[ $1 == -h || $1 == --help ]]; then
+		echo "Usage: kdesc <namespace> <pod partial name>"
+		echo "If no args are provided, kdesc will run kubectx and kubens"
+		echo "If -n is passed as the first arg, kdesc will use the specified namespace in the current context"
+		echo "If -p is passed as the first arg, kdesc will use the specified partial pod name across all namespaces in the current context"
+	elif [ $# -eq 0 ]; then
+		kubectx
+		kubens
+		kdp $(echo $(kgp | fzf | awk -F" " '{print $1}'))
+	elif [[ $1 == -n ]]; then
+		kdp -n $2 $(echo $(kgp -n $2 | fzf | awk -F" " '{print $1}'))
+	#elif [[ $1 == -p ]]; then
+		#kdp -n $(echo $(kgp --all-namespaces | fzf --query $2 | awk -F" " '{print $2}'))
+	else
+		kdesc -h
+	fi
+}
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

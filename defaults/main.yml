@@ -50,6 +50,8 @@ iserver_alpine_repos:
 iserver_debian_custom_repos:
   - deb https://download.docker.com/linux/debian buster stable
   - deb https://apt.releases.hashicorp.com buster main
+  - deb https://packages.cloud.google.com/apt cloud-sdk main
+  - deb https://baltocdn.com/helm/stable/debian/ all main
 
 iserver_debian_zfs_repos:
  - deb http://deb.debian.org/debian buster main contrib
@@ -90,12 +92,14 @@ iserver_deb_packages:
 # custom packages to install
 iserver_custom_packages:
   - apt-transport-https
+  - awscli
   - build-essential
   - ca-certificates
   - consul
   - docker-ce
   - docker-ce-cli
   - containerd.io
+  - google-cloud-sdk
   - gnupg-agent
   - kubectx
   - terraform

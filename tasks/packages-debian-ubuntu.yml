@@ -6,14 +6,16 @@
     vm_role: "{{ vm_role }}"
   command: echo "{{ vm_role }}"
   register: isdev
-  when: vm_role is search('dev')
+  when:
+    vm_role.stdout is search('dev')
 
 - name: Check for zfs support.
   vars:
     vm_zfs: "{{ vm_zfs }}"
   command: echo "{{ vm_zfs }}"
   register: iszfs
-  when: vm_zfs is search('true')
+  when:
+    vm_zfs.stdout is search('true')
 
 # replaces sources.list repos.
 - name: Move original /etc/apt/sources.list to back it up (once).

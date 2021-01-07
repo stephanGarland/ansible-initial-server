@@ -95,6 +95,7 @@
     line: 'export PS1="\[\033[1;31m\][\u@\h:\w]#\[\033[0m\] "'
 
 - name: Ensure that Oh My Zsh is installed.
+  become_user: "{{ iserver_user }}"
   shell: |
     curl -fsSl https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -o install-ohmyzsh.sh
     chmod +x install-ohmyzsh.sh
@@ -106,6 +107,7 @@
   when: iszsh.changed
 
 - name: Ensure that Oh My Zsh plugins are installed.
+  become_user: "{{ iserver_user }}"
   git:
     repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/you-should-use
@@ -113,6 +115,7 @@
   when: iszsh.changed
 
 - name: Ensure that Oh My Zsh plugins are installed.
+  become_user: "{{ iserver_user }}"
   git:
     repo: https://github.com/zsh-users/zsh-autosuggestions
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -120,6 +123,7 @@
   when: iszsh.changed
 
 - name: Ensure that Oh My Zsh plugins are installed.
+  become_user: "{{ iserver_user }}"
   git:
     repo: https://github.com/zsh-users/zsh-history-substring-search
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
@@ -127,6 +131,7 @@
   when: iszsh.changed
 
 - name: Ensure that Oh My Zsh plugins are installed.
+  become_user: "{{ iserver_user }}"
   git:
     repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -134,6 +139,7 @@
   when: iszsh.changed
 
 - name: Ensure that Oh My Zsh plugins are installed.
+  become_user: "{{ iserver_user }}"
   git:
     repo: https://github.com/romkatv/powerlevel10k.git
     dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -141,6 +147,7 @@
   when: iszsh.changed
 
 - name: Copy the user's .zshrc.
+  become_user: "{{ iserver_user }}"
   copy:
     src: 30-zshrc
     dest: "/home/{{ iserver_user }}/.zshrc"
@@ -148,6 +155,7 @@
   when: iszsh.changed
 
 - name: Copy the user's .p10k.zsh.
+  become_user: "{{ iserver_user }}"
   copy:
     src: 40-p10k
     dest: "/home/{{ iserver_user }}/.p10k.zsh"

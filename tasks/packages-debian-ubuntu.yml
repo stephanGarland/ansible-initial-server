@@ -127,14 +127,6 @@
     remote_src: yes
   when: isdev.changed
 
-- name: Add GOPATH to system path.
-  vars:
-    extra_path: /usr/local/go/bin
-  lineinfile:
-    path: /etc/environment
-    line: "PATH={{ extra_path }}:$PATH"
-  when: isdev.changed
-
 - name: Ensure that Terragrunt is installed.
   get_url:
     url: https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64

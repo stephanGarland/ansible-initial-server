@@ -116,6 +116,7 @@ iserver_pip_packages:
   - requests
   - seaborn # will install matplotlib and scipy
   - virtualenv
+  - virtualenvwrapper
 
 # packages to install on every OpenBSD server
 iserver_obsd_packages:

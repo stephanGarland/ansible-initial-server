@@ -27,9 +27,6 @@ gpsu() {
     git push --set-upstream origin $branch
 }
 
-KUBECONFIG=$(find ~/.kube/config.d -type f | paste -s -d ":" -) kubectl config view --merge --flatten > ~/.kube/config.d/merged.conf
-export KUBECONFIG="$HOME/.kube/config.d/merged.conf"
-
 kshell() {
     if [[ $1 == -h || $1 == --help ]]; then
         echo "Usage: kshell <namespace> <container>"

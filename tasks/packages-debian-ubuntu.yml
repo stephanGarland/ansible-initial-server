@@ -118,6 +118,14 @@
     state: present
   when: isdev.changed
 
+- name: Ensure that virtualenv wrapper is installed if zsh is customized.
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  pip:
+    name: virtualenvwrapper
+    state: present
+  when: iszfs.changed
+
 - name: Ensure that Golang is installed.
   unarchive:
     src: https://golang.org/dl/go1.15.6.linux-amd64.tar.gz

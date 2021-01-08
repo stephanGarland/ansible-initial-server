@@ -168,12 +168,7 @@
   # Alternately, could add a shell line to the next task,
   # but would still have to handle whether they wanted zsh.
 - name: Change the user's shell to zsh.
-  shell: "chsh -s /usr/bin/zsh -u {{ iserver_user }}"
+  shell: "chsh -s /bin/zsh {{ iserver_user }}"
   args:
     warn: no
   when: iszsh.changed
-
-- name: Change user's account password to the ssh password."
-  user:
-    name: "{{ iserver_user }}"
-    password: "{{ vm_password }}"

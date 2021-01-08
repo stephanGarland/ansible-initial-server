@@ -52,6 +52,7 @@ iserver_debian_custom_repos:
   - deb https://apt.releases.hashicorp.com buster main
   - deb https://packages.cloud.google.com/apt cloud-sdk main
   - deb https://baltocdn.com/helm/stable/debian/ all main
+  - deb https://apt.kubernetes.io/ kubernetes-xenial main
 
 iserver_debian_zfs_repos:
  - deb http://deb.debian.org/debian buster main contrib
@@ -101,6 +102,7 @@ iserver_custom_packages:
   - containerd.io
   - google-cloud-sdk
   - gnupg-agent
+  - kubectl
   - kubectx
   - terraform
   - packer

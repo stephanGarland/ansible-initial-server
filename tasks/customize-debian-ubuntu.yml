@@ -106,9 +106,8 @@
     warn: no
   when: iszsh.changed
 
-  set_fact: 
+- set_fact:
     zsh_path: "/home/{{ iserver_user }}/.oh-my-zsh"
-    when: iszsh.changed
 
 - name: Ensure that Oh My Zsh plugins are installed.
   become_user: "{{ iserver_user }}"

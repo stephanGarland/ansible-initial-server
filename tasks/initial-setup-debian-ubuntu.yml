@@ -24,7 +24,7 @@
       group: "{{ iserver_user }}"
       password: '*'
 
-  - name: Add the default user with passwordless sudo to sodoers.d
+  - name: Add the default user with passwordless sudo to sudoers.d
     template:
       src: default-user.j2
       dest: /etc/sudoers.d/default-user

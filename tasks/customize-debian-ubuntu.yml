@@ -162,3 +162,9 @@
     dest: "/home/{{ iserver_user }}/.p10k.zsh"
     mode: a+x
   when: iszsh.changed
+
+- name: Change the user's shell to zsh.
+  shell: "chsh -s /usr/bin/zsh -u {{ iserver_user }}"
+  args:
+    warn: no
+  when: iszsh.changed

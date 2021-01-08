@@ -6,16 +6,14 @@
     vm_role: "{{ vm_role }}"
   command: echo "{{ vm_role }}"
   register: isdev
-  when:
-    vm_role is search('dev')
+  when: vm_role is search('dev')
 
 - name: Check for zfs support.
   vars:
     vm_zfs: "{{ vm_zfs }}"
   command: echo "{{ vm_zfs }}"
   register: iszfs
-  when:
-    vm_zfs is search('true')
+  when: vm_zfs is search('true')
 
 # replaces sources.list repos.
 - name: Move original /etc/apt/sources.list to back it up (once).
@@ -154,7 +152,7 @@
     default_release: buster-backports
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
 
-# This is done via the install script rather than as part of the package install,
+# This is done via via a shell rather than as part of the package install,
 # as Debian's version doesn't handle ZFS pre-allocation correctly.
 # This can be removed when Debian includes >= v1.48.
 - name: Ensure that rclone is installed.

@@ -99,6 +99,7 @@ iserver_custom_packages:
   - consul
   - docker-ce
   - docker-ce-cli
+  - docker-compose
   - containerd.io
   - google-cloud-sdk
   - gnupg-agent

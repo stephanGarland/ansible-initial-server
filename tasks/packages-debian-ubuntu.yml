@@ -68,6 +68,13 @@
     state: present
   when: (ansible_distribution == 'Debian') and (isdev.changed)
 
+- name: Add Ansible repo key.
+  ansible.builtin.apt_key:
+    id: 93C4A3FD7BB9C367
+    keyserver: keyserver.ubuntu.com
+    state: present
+  when: ansible_distribution == 'Debian'
+
 - name: Add custom repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
@@ -158,6 +165,13 @@
     name: zfsutils-linux
     state: present
     default_release: buster-backports
+  when: (ansible_distribution == 'Debian') and (iszfs.changed)
+
+
+- name: Ensure that autofs is installed.
+  apt:
+    name: autofs
+    state: present
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
 
 # This is done via via a shell rather than as part of the package install,

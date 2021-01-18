@@ -17,6 +17,8 @@ iserver_debian_repos:
   - deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
   - deb http://deb.debian.org/debian buster-updates main contrib non-free
   - deb-src http://deb.debian.org/debian buster-updates main contrib non-free
+  - deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main # Used to install Ansible
+
 
 iserver_ubuntu_repos:
   ## Ubuntu 18.04 example
@@ -69,28 +71,35 @@ iserver_deb_packages:
   - nano             # set as default editor in .profile
   - psmisc           # includes pstree
   - wget
+  - ansible
+  - bc
   - curl
+  - etherwake
   - fail2ban
   - git
   - glances
   - htop
   - jq
   - mc
-  - ncdu 
+  - ncdu
+  - nfs-kernel-server
   - parallel
   - pigz
   - pv
   - python3
   - python3-pip
   - python3-setuptools
+  - rsync
+  - samba
   - screen
   - silversearcher-ag
+  - snmpd
   - software-properties-common
   - tmux 
   - tree 
   - zsh
 
-# custom packages to install
+# custom packages to install if dev
 iserver_custom_packages:
   - apt-transport-https
   - awscli

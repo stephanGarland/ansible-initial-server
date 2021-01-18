@@ -106,6 +106,7 @@ iserver_custom_packages:
   - build-essential
   - ca-certificates
   - consul
+  - dialog
   - docker-ce
   - docker-ce-cli
   - docker-compose

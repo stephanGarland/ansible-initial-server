@@ -44,30 +44,6 @@
     dest: /etc/apt/sources.list
     force: no
 
-- name: Add Docker repo key.
-  apt_key:
-    url: https://download.docker.com/linux/debian/gpg
-    state: present
-  when: (ansible_distribution == 'Debian') and (isdev.changed)
-
-- name: Add Hashicorp repo key.
-  apt_key:
-    url: https://apt.releases.hashicorp.com/gpg
-    state: present
-  when: (ansible_distribution == 'Debian') and (isdev.changed)
-
-- name: Add Helm repo key.
-  apt_key:
-    url: https://baltocdn.com/helm/signing.asc
-    state: present
-  when: (ansible_distribution == 'Debian') and (isdev.changed)
-
-- name: Add GCloud repo key.
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
-  when: (ansible_distribution == 'Debian') and (isdev.changed)
-
 - name: Add Ansible repo key.
   ansible.builtin.apt_key:
     id: 93C4A3FD7BB9C367
@@ -100,9 +76,9 @@
     name: "{{ iserver_deb_packages }}"
     state: present
 
-- name: Ensure that custom packages are installed.
+- name: Ensure that dev packages are installed.
   apt:
-    name: "{{ iserver_custom_packages }}"
+    name: "{{ iserver_dev_packages }}"
     state: present
   when: isdev.changed
 
@@ -125,13 +101,13 @@
     state: present
   when: isdev.changed
 
-- name: Ensure that virtualenv wrapper is installed if zsh is customized.
+- name: Ensure that virtualenv wrapper is installed.
   vars:
     ansible_python_interpreter: /usr/bin/python3
   pip:
     name: virtualenvwrapper
     state: present
-  when: iszfs.changed
+  when: iszsh.changed
 
 - name: Ensure that Golang is installed.
   unarchive:
@@ -166,7 +142,6 @@
     state: present
     default_release: buster-backports
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
-
 
 - name: Ensure that autofs is installed.
   apt:

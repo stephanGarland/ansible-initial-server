@@ -69,24 +69,26 @@ iserver_deb_packages:
   - fail2ban
   - git
   - glances
-  - haveged                            # prevent vm boot delays
+  - haveged # prevent vm boot delays
   - htop
   - jq
   - mc
-  - nano                               # set as default editor in .profile
+  - nano # set as default editor in .profile
   - ncdu
-  - net-tools                          # includes ifconfig, netstat
+  - net-tools # includes ifconfig, netstat
   - nfs-kernel-server
-  - openssh-server                     # needed for Travis testing
+  - openssh-server # needed for Travis testing
   - parallel
+  - parted
   - pigz
-  - psmisc                             # includes pstree
+  - psmisc # includes pstree
   - pv
   - python3
   - python3-pip
   - python3-setuptools
-  - python-apt                         # used by ansible
-  - qemu-guest-agent                   # needed by packer
+  - python3-venv
+  - python-apt # used by ansible
+  - qemu-guest-agent # needed by packer
   - rsync
   - samba
   - screen
@@ -100,11 +102,11 @@ iserver_deb_packages:
   - zsh
 
 # custom packages to install if dev
-iserver_custom_packages:
-  - apt-transport-https
+iserver_dev_packages:
+  - apt-transport-https # needed by docker
   - awscli
   - build-essential
-  - ca-certificates
+  - ca-certificates # needed by docker
   - consul
   - dialog
   - docker-ce
@@ -112,20 +114,20 @@ iserver_custom_packages:
   - docker-compose
   - containerd.io
   - google-cloud-sdk
-  - gnupg-agent
+  - gnupg-agent # needed by docker
   - kubectl
   - kubectx
   - terraform
   - packer
   - vault
- 
+
 # custom python libraries to install
 iserver_pip_packages:
-  - jupyter                            # will install ipython
+  - jupyter # will install ipython
   - mypy
-  - pandas                             # will install correct numpy dependency
+  - pandas # will install correct numpy dependency
   - requests
-  - seaborn                            # will install matplotlib and scipy
+  - seaborn # will install matplotlib and scipy
   - virtualenv
   - virtualenvwrapper
 
@@ -153,7 +155,7 @@ iserver_hostname: iserver-kvm
 iserver_domain: unassigned.domain
 iserver_fqdn: "{{ iserver_hostname }}.{{ iserver_domain }}"
 
-iserver_interface: ens18
+iserver_interface: eth0
 iserver_obsd_interface: vio0
 set_fixed_IP: false
 # Add here main IP of the host
@@ -167,7 +169,7 @@ iserver_nameservers: 1.1.1.1,1.0.0.1
 
 ### SSH ###
 iserver_ssh_port: 22
-# this picks up the dafault public key from the user
+# this picks up the default public key from the user
 iserver_sshkey: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 iserver_ssh_banner: none # or /etc/ssh/issue.net
 

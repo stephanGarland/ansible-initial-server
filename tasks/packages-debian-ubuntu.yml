@@ -21,6 +21,13 @@
   args:
     creates: /etc/apt/sources.list.original
 
+- name: Add Ansible repo key.
+  ansible.builtin.apt_key:
+    id: 93C4A3FD7BB9C367
+    keyserver: keyserver.ubuntu.com
+    state: present
+  when: ansible_distribution == 'Debian'
+
 # this expects python-apt to be installed.
 # at least two repos need to be defined. repos are added to sources.list.d/
 - name: Add a set of specified repositories into sources list directory.
@@ -43,13 +50,6 @@
     src: sources.list
     dest: /etc/apt/sources.list
     force: no
-
-- name: Add Ansible repo key.
-  ansible.builtin.apt_key:
-    id: 93C4A3FD7BB9C367
-    keyserver: keyserver.ubuntu.com
-    state: present
-  when: ansible_distribution == 'Debian'
 
 - name: Add custom repositories into sources list directory.
   apt_repository:

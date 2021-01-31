@@ -5,7 +5,7 @@
 # use the name of the default user which was used during installation
 # this Ansible role is not intended to add or change a default user
 iserver_user: deploy
-iserver_become: sudo ## do not chanage this ##
+iserver_become: sudo ## do not change this ##
 iserver_lock_root: false
 
 ### BASE PACKAGES ###

@@ -76,7 +76,6 @@ iserver_deb_packages:
   - nano # set as default editor in .profile
   - ncdu
   - net-tools # includes ifconfig, netstat
-  - nfs-kernel-server
   - openssh-server # needed for Travis testing
   - parallel
   - parted
@@ -90,7 +89,6 @@ iserver_deb_packages:
   - python-apt # used by ansible
   - qemu-guest-agent # needed by packer
   - rsync
-  - samba
   - screen
   - silversearcher-ag
   - snmpd

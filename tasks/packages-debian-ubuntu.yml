@@ -8,6 +8,13 @@
   register: isdev
   when: vm_role is search('dev')
 
+- name: Check for zsh support.
+  vars:
+    vm_zsh: "{{ vm_zsh }}"
+  command: echo "{{ vm_zsh }}"
+  register: iszsh
+  when: vm_zsh is search('true')
+
 - name: Check for zfs support.
   vars:
     vm_zfs: "{{ vm_zfs }}"
@@ -25,7 +32,6 @@
   ansible.builtin.apt_key:
     id: 93C4A3FD7BB9C367
     keyserver: keyserver.ubuntu.com
-    state: present
   when: ansible_distribution == 'Debian'
 
 # this expects python-apt to be installed.
@@ -33,14 +39,12 @@
 - name: Add a set of specified repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
-    state: present
   loop: "{{ iserver_debian_repos }}"
   when: ansible_distribution == 'Debian'
 
 - name: Add a set of specified repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
-    state: present
   loop: "{{ iserver_ubuntu_repos }}"
   when: ansible_distribution == 'Ubuntu'
 
@@ -54,14 +58,13 @@
 - name: Add custom repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
-    state: present
   loop: "{{ iserver_debian_custom_repos }}"
   when: (ansible_distribution == 'Debian') and (isdev.changed)
 
 - name: Add ZFS repositories into sources list directory.
   apt_repository:
     repo: "{{ item }}"
-    state: present
+    
   loop: "{{ iserver_debian_zfs_repos }}"
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
 
@@ -74,18 +77,15 @@
 - name: Ensure that initial packages are installed.
   apt:
     name: "{{ iserver_deb_packages }}"
-    state: present
 
 - name: Ensure that dev packages are installed.
   apt:
     name: "{{ iserver_dev_packages }}"
-    state: present
   when: isdev.changed
 
 - name: Ensure that Linux headers are installed.
   apt:
     name: "linux-headers-{{ ansible_kernel }}"
-    state: present
   when: (isdev.changed) or (iszfs.changed)
 
 - name: Ensure that micro is installed.
@@ -98,8 +98,14 @@
       ansible_python_interpreter: /usr/bin/python3
   pip:
     name: "{{ iserver_pip_packages }}"
-    state: present
   when: isdev.changed
+
+- name: Ensure that virtualenv wrapper is installed.
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  pip:
+    name: virtualenvwrapper
+  when: iszsh.changed
 
 - name: Ensure that Golang is installed.
   unarchive:
@@ -117,7 +123,6 @@
 - name: Ensure that ZFS On Linux pre-requisite is installed.
   apt:
     name: zfs-dkms
-    state: present
     default_release: buster-backports
     install_recommends: no
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
@@ -125,20 +130,17 @@
 - name: Add the ZFS module.
   modprobe:
     name: zfs
-    state: present
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
 
 - name: Ensure that ZFS On Linux is installed.
   apt:
     name: zfsutils-linux
-    state: present
     default_release: buster-backports
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
 
 - name: Ensure that autofs is installed.
   apt:
     name: autofs
-    state: present
   when: (ansible_distribution == 'Debian') and (iszfs.changed)
 
 # This is done via via a shell rather than as part of the package install,

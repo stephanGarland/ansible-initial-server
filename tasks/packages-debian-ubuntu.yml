@@ -101,14 +101,6 @@
     state: present
   when: isdev.changed
 
-- name: Ensure that virtualenv wrapper is installed.
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
-  pip:
-    name: virtualenvwrapper
-    state: present
-  when: iszsh.changed
-
 - name: Ensure that Golang is installed.
   unarchive:
     src: https://golang.org/dl/go1.15.6.linux-amd64.tar.gz

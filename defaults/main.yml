@@ -64,6 +64,7 @@ iserver_debian_zfs_repos:
 iserver_deb_packages:
   - ansible
   - bc
+  - cloud-init
   - curl
   - etherwake
   - fail2ban

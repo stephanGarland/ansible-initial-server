@@ -63,6 +63,7 @@ iserver_debian_zfs_repos:
 # packages to install on every Debian/Ubuntu server
 iserver_deb_packages:
   - ansible
+  - atop
   - bc
   - cloud-init
   - curl
@@ -72,6 +73,7 @@ iserver_deb_packages:
   - glances
   - haveged # prevent vm boot delays
   - htop
+  - iotop
   - jq
   - mc
   - nano # set as default editor in .profile
@@ -92,6 +94,7 @@ iserver_deb_packages:
   - rsync
   - screen
   - silversearcher-ag
+  - smartmontools
   - snmpd
   - software-properties-common
   - sudo

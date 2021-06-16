@@ -91,9 +91,9 @@ iserver_deb_packages:
   - python3-venv
   - python-apt # used by ansible
   - qemu-guest-agent # needed by packer
+  - ripgrep
   - rsync
   - screen
-  - silversearcher-ag
   - smartmontools
   - snmpd
   - software-properties-common

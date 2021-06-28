@@ -17,14 +17,78 @@ alias gbsc="git branch --show-current"
 alias gdel="git stash && git stash drop"
 alias ksw="kubectx"
 alias kns="kubens"
+alias mkvenv="mkvirtualenv"
+alias rmvenv="rmvirtualenv"
 alias tf="terraform"
 alias tg="terragrunt"
+alias workoff="deactivate"
 
 export PATH=$PATH:~/.local/bin:/usr/local/go/bin
 
+glb() {
+  result=$(git branch -a --color=always | grep -v '/HEAD\s' | sort |
+    fzf --height 50% --border --ansi --tac --preview-window right:70% \
+      --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
+    sed 's/^..//' | cut -d' ' -f1)
+
+  if [[ $result != "" ]]; then
+    if [[ $result == remotes/* ]]; then
+      git checkout --track $(echo $result | sed 's#remotes/##')
+    else
+      git checkout "$result"
+    fi
+  fi
+}
+
 gpsu() {
-    branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-    git push --set-upstream origin $branch
+    git push --set-upstream origin $(gbsc)
+}
+
+gtags() {
+    current_rev=$(git describe --abbrev=0 2>/dev/null | sed 's/v//')
+	current_rev_split=($(echo $current_rev | tr "." " "))
+	decrement=$([[ $(ps -p $$) =~ "zsh" ]]; echo $?)
+    major=$((current_rev_split[1-decrement]))
+    minor=$((current_rev_split[2-decrement]))
+    patch=$((current_rev_split[3-decrement]))
+    if [ -z "$current_rev" ]; then
+        echo "No tags found - are you in a git repo?"
+        return 1
+    fi
+
+	opts=("Bugfix" "Small change" "Large change" "Overwrite v$current_rev" "Cancel")
+    select opt in "${opts[@]}"
+    do
+        case $REPLY in
+        1)  new_rev="$major.$minor.$((patch+1))"
+            break
+            ;;
+        2)  new_rev="$major.$((minor+1)).0"
+            break
+            ;;
+        3)  new_rev="$((major+1)).0.0"
+            break
+            ;;
+		4)  echo "Enter a commit message: "
+            read commit
+            git tag -d "v$current_rev"
+            git push origin :refs/tags/"v$current_rev"
+            git tag "v$current_rev" -a -m $commit
+            git push origin refs/tags/"v$current_rev"
+            return 0
+            ;;
+        5)  echo "Bye!"
+            return 0
+            ;;
+        *)  echo "Invalid option: $REPLY"
+            ;;
+        esac
+    done
+
+    echo "Enter a commit message: "
+	read commit
+	git tag "v$new_rev" -a -m $commit
+	git push origin refs/tags/"v$new_rev"
 }
 
 kshell() {
@@ -61,6 +125,12 @@ kdesc() {
 		kdesc -h
 	fi
 }
+
+# Change from default of **
+export FZF_COMPLETION_TRIGGER="~~"
+
+# Enable fzf keybindings
+source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

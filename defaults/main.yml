@@ -69,6 +69,7 @@ iserver_deb_packages:
   - curl
   - etherwake
   - fail2ban
+  - fzf
   - git
   - glances
   - haveged # prevent vm boot delays

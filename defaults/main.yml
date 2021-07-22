@@ -100,7 +100,8 @@ iserver_deb_packages:
   - software-properties-common
   - sudo
   - tmux 
-  - tree 
+  - tree
+  - units
   - wget
   - zsh
 
